@@ -20,26 +20,23 @@ You are free to use any frameworks/NuGet packages that you see fit.
  
 You should plan to spend around 1 to 3 hours to complete the exercise.
 
-### My Improvements
+## My Improvements
 
-In refactoring the code I've done the following.
+In refactoring the code, I made the following changes:
 
-Moved the Account operations to it's own service (Single Responsability Principle).
+- Moved the account operations to their own service (Single Responsibility Principle).  
+- Moved the `AccountDataStore` into `AccountService`, as it is related to the account, and used the Factory pattern to select the configured one (Main or Backup).  
+- Created multiple payment validators and instantiated the appropriate one through a Factory pattern. All validators implement a common interface that defines the `Validate` function.  
+- Added null checks, made the `Balance` setter in the `Account` class private, and implemented internal `Withdraw` and `Deposit` functions for managing the balance.  
+- Added unit tests for services, data, and validators.
 
-Moved the AccountDataStore into AccountService as it's related to the Account and used the
-Factory pattern to get the configured one (Main or Backup).
 
-Created multiple Payment Validators and instantiate the one needed through a Factory pattern, and interfaced all of them through a common interface that implements the function to Validate.
+## If I Had More Time
 
-Added null checking and made the Account class Balance setter private and implemented internal Withdraw and Deposit functions for Balance.
+If I had more time, I would have made the operations asynchronous, added logging, and included an actual data source and project files for manual testing (such as an API controller, a repository implementation, and possibly a front end or a Swagger/OpenAPI setup).
 
-Added Unit testing for Services, Data and Validators.
 
-### If I had more time
-
-If I had more time I would have made the operations Async, added Logging and added an actual data source and project files to manual test (API Controller, Actual Repository and maybe a frot end or Swagger or OpenAPI implementation).
-
-### Made a high level overview of my refactoring logic
+## Made a high level overview of my refactoring logic
 
 ![alt text](image.png)
 
