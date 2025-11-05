@@ -53,8 +53,7 @@ public class PaymentService(
                 result.Success = false;
                 return result;
             }
-
-
+            
             account.Withdraw(request.Amount);
             accountService.UpdateAccount(account);
         }
