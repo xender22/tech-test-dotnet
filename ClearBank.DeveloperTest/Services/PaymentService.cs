@@ -1,93 +1,53 @@
 ﻿using ClearBank.DeveloperTest.Data;
 using ClearBank.DeveloperTest.Types;
 using System.Configuration;
+using ClearBank.DeveloperTest.Services.Interfaces;
+using ClearBank.DeveloperTest.Validators.Interfaces;
 
-namespace ClearBank.DeveloperTest.Services
+namespace ClearBank.DeveloperTest.Services;
+
+public class PaymentService(IAccountService accountService, 
+            IPaymentValidatorFactory paymentValidatorFactory) : IPaymentService
 {
-    public class PaymentService : IPaymentService
+    public MakePaymentResult MakePayment(MakePaymentRequest request)
     {
-        public MakePaymentResult MakePayment(MakePaymentRequest request)
+        var result = new MakePaymentResult { };
+        if (request == null)
         {
-            var dataStoreType = ConfigurationManager.AppSettings["DataStoreType"];
-
-            Account account = null;
-
-            if (dataStoreType == "Backup")
-            {
-                var accountDataStore = new BackupAccountDataStore();
-                account = accountDataStore.GetAccount(request.DebtorAccountNumber);
-            }
-            else
-            {
-                var accountDataStore = new AccountDataStore();
-                account = accountDataStore.GetAccount(request.DebtorAccountNumber);
-            }
-
-            var result = new MakePaymentResult();
-
-            result.Success = true;
-            
-            switch (request.PaymentScheme)
-            {
-                case PaymentScheme.Bacs:
-                    if (account == null)
-                    {
-                        result.Success = false;
-                    }
-                    else if (!account.AllowedPaymentSchemes.HasFlag(AllowedPaymentSchemes.Bacs))
-                    {
-                        result.Success = false;
-                    }
-                    break;
-
-                case PaymentScheme.FasterPayments:
-                    if (account == null)
-                    {
-                        result.Success = false;
-                    }
-                    else if (!account.AllowedPaymentSchemes.HasFlag(AllowedPaymentSchemes.FasterPayments))
-                    {
-                        result.Success = false;
-                    }
-                    else if (account.Balance < request.Amount)
-                    {
-                        result.Success = false;
-                    }
-                    break;
-
-                case PaymentScheme.Chaps:
-                    if (account == null)
-                    {
-                        result.Success = false;
-                    }
-                    else if (!account.AllowedPaymentSchemes.HasFlag(AllowedPaymentSchemes.Chaps))
-                    {
-                        result.Success = false;
-                    }
-                    else if (account.Status != AccountStatus.Live)
-                    {
-                        result.Success = false;
-                    }
-                    break;
-            }
-
-            if (result.Success)
-            {
-                account.Balance -= request.Amount;
-
-                if (dataStoreType == "Backup")
-                {
-                    var accountDataStore = new BackupAccountDataStore();
-                    accountDataStore.UpdateAccount(account);
-                }
-                else
-                {
-                    var accountDataStore = new AccountDataStore();
-                    accountDataStore.UpdateAccount(account);
-                }
-            }
-
+            result.Message = "Request is null";
+            result.Success = false;
             return result;
         }
+        
+        if (request.Amount <= 0)
+        {
+            result.Message = "Amount must be greater than zero";
+            result.Success = false;
+            return result;
+        }
+        
+        var account = accountService.GetAccount(request.CreditorAccountNumber);
+        if (account == null)
+        {
+            result.Message = "Account not found";
+            result.Success = false;
+            return result;
+        }
+
+        var validator = paymentValidatorFactory.GetValidator(request.PaymentScheme);
+        var validateRequest = validator.Validate(account, request);
+        if (!validateRequest)
+        {
+            result.Message = "Payment not valid";
+            result.Success = false;
+            return result;
+        }
+        
+        account.Withdraw(request.Amount);
+        accountService.UpdateAccount(account);
+        
+        result.Success = true;
+        result.Message = "Payment successful";
+        return result;
     }
 }
