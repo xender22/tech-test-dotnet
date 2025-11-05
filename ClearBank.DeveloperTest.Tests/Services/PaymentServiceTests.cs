@@ -125,4 +125,32 @@ public class PaymentServiceTests
         Assert.Equal(400, account.Balance);
         _mockAccountService.Verify(s => s.UpdateAccount(account), Times.Once);
     }
+    
+    [Fact]
+    public void MakePayment_ShouldReturnFailure_WhenValidatorIsNull()
+    {
+        // Arrange
+        var request = new MakePaymentRequest
+        {
+            Amount = 100,
+            CreditorAccountNumber = "ACC1",
+            PaymentScheme = PaymentScheme.Bacs
+        };
+    
+        var account = new Account { AccountNumber = request.CreditorAccountNumber };
+        account.Deposit(500m);
+
+        _mockAccountService.Setup(s => s.GetAccount(request.CreditorAccountNumber)).Returns(account);
+
+        // Setup factory to return null validator
+        _mockValidatorFactory.Setup(f => f.GetValidator(request.PaymentScheme)).Returns((IPaymentValidator?)null);
+
+        // Act
+        var result = _paymentService.MakePayment(request);
+
+        // Assert
+        Assert.False(result.Success);
+        Assert.Equal("Payment scheme not supported", result.Message);
+    }
+
 }
