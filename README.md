@@ -24,11 +24,11 @@ You should plan to spend around 1 to 3 hours to complete the exercise.
 
 I've made the following assumptions while implementing the changes:
 
-- The logic of `MakePayment` is **correct**; only the code structure required changes or improvements.
+- The logic of `MakePayment` is **correct**, only the code structure required changes or improvements.
 
 - The project was provided as two class libraries, and based on the `AccountDataStore` implementation (where some code was omitted for **brevity**), no further implementation is required beyond what was originally given.
 
-- Following the first point, if the `MakePayment` logic is correct, then the `Validators` for payments can allow exceptions — for example, an account may have a transaction validated even if it is inactive (e.g., payment liabilities), or an account may make a payment without having the full balance (e.g., overdraft).
+- Following the first point, if the `MakePayment` logic is correct, then the `Validators` for payments can allow exceptions, for example, an account may have a transaction validated even if it is inactive (e.g., payment liabilities), or an account may make a payment without having the full balance (e.g., overdraft).
 
 
 
