@@ -20,6 +20,18 @@ You are free to use any frameworks/NuGet packages that you see fit.
  
 You should plan to spend around 1 to 3 hours to complete the exercise.
 
+## Assumptions
+
+I've made the following assumptions while implementing the changes:
+
+- The logic of `MakePayment` is **correct**; only the code structure required changes or improvements.
+
+- The project was provided as two class libraries, and based on the `AccountDataStore` implementation (where some code was omitted for **brevity**), no further implementation is required beyond what was originally given.
+
+- Following the first point, if the `MakePayment` logic is correct, then the `Validators` for payments can allow exceptions — for example, an account may have a transaction validated even if it is inactive (e.g., payment liabilities), or an account may make a payment without having the full balance (e.g., overdraft).
+
+
+
 ## My Improvements
 
 In refactoring the code, I made the following changes:
@@ -36,7 +48,7 @@ In refactoring the code, I made the following changes:
 If I had more time, I would have made the operations asynchronous, added logging, and included an actual data source and project files for manual testing (such as an API controller, a repository implementation, and possibly a front end or a Swagger/OpenAPI setup).
 
 
-## Made a high level overview of my refactoring logic
+## High Level Overview of Refactoring Logic
 
 ![alt text](image.png)
 
