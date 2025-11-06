@@ -45,7 +45,7 @@ In refactoring the code, I made the following changes:
 
 ## If I Had More Time
 
-If I had more time, I would have made the operations asynchronous, added logging, and included an actual data source and project files for manual testing (such as an API controller, a repository implementation, and possibly a front end or a Swagger/OpenAPI setup).
+If I had more time, I would have made the operations asynchronous, would have implemented DTO's (Data Transfer Objects), added logging, and included an actual data source and project files for manual testing (such as an API controller, a repository implementation, and possibly a front end or a Swagger/OpenAPI setup).
 
 
 ## High Level Overview of Refactoring Logic
