@@ -52,3 +52,8 @@ If I had more time, I would have made the operations asynchronous, would have im
 
 ![alt text](image.png)
 
+
+
+
+
+Hey, if you're a candidate and reading this, this solution will allow you to pass to the final interview, do as you will, just don't copy it 1 to 1 lol.
